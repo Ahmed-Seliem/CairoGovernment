@@ -29,6 +29,8 @@ namespace UmbracoBlockGrid.Site
         /// </remarks>
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews();
+
             services.AddUmbraco(_env, _config)
                 .AddBackOffice()
                 .AddWebsite()
@@ -56,6 +58,8 @@ namespace UmbracoBlockGrid.Site
                 })
                 .WithEndpoints(u =>
                 {
+                    u.EndpointRouteBuilder.MapControllers();
+
                     u.UseInstallerEndpoints();
                     u.UseBackOfficeEndpoints();
                     u.UseWebsiteEndpoints();

@@ -1,0 +1,606 @@
+@{
+    Layout = "~/Views/Shared/CairoGovernmentLayout.cshtml";
+    var assetBase = Url.Content("~/Cairo Government UI/assets");
+    string Asset(string fileName) => $"{assetBase}/{fileName}";
+}
+
+@section Head {
+    <style>
+        :root {
+          --red:    #e8322a;
+          --blue:   #1d5aa5;
+          --green:  #2a9a6e;
+          --purple: #7250b9;
+          --text:   #1a1e2a;
+          --muted:  #6b7280;
+          --border: #e6ecf2;
+          --shadow: 0 6px 22px rgba(16,24,40,.07);
+        }
+        body {
+          background: #eef2f8;
+          color: var(--text);
+          font-family: 'Cairo', Tahoma, Arial, sans-serif;
+          direction: rtl;
+        }
+        .page {
+          max-width: 1460px;
+          margin: 28px auto;
+          padding: 0 32px 40px;
+        }
+        .card {
+          background: #fff;
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          box-shadow: var(--shadow);
+        }
+        .row1 {
+          display: grid;
+          grid-template-columns: 62% 38%;
+          gap: 22px;
+          margin-bottom: 22px;
+          align-items: start;
+        }
+        .right-col { display: flex; flex-direction: column; gap: 18px; }
+        .dt-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 20px;
+        }
+        .dt-title-text { text-align: right; }
+        .dt-title-text h1 {
+          font-size: 40px;
+          font-weight: 900;
+          color: var(--text);
+          margin-bottom: 8px;
+        }
+        .dt-title-text p {
+          font-size: 15px;
+          line-height: 1.9;
+          color: var(--muted);
+          max-width: 560px;
+        }
+        .dt-icon-box {
+          width: 90px; height: 90px;
+          border: 1.5px solid var(--border);
+          border-radius: 14px;
+          background: #fff;
+          display: grid; place-items: center;
+          font-size: 46px;
+          color: var(--blue);
+          flex-shrink: 0;
+          box-shadow: 0 4px 12px rgba(0,0,0,.06);
+        }
+        .dt-sub-row {
+          display: grid;
+          grid-template-columns: 53% 47%;
+          gap: 18px;
+        }
+        .stats-card { padding: 22px 24px 20px; }
+        .card-heading {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 18px;
+        }
+        .card-heading h2 { font-size: 19px; font-weight: 800; }
+        .ch-icon {
+          width: 46px; height: 46px;
+          border-radius: 10px;
+          background: #e8f2ff;
+          color: var(--blue);
+          display: grid; place-items: center;
+          font-size: 22px;
+        }
+        .stats-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+        .dt-stat {
+          border: 1px solid var(--border);
+          border-radius: 11px;
+          padding: 14px 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+        .dt-stat-text { text-align: right; }
+        .dt-stat-text strong { font-size: 22px; font-weight: 900; display: block; }
+        .dt-stat-text small  { font-size: 12.5px; color: var(--muted); }
+        .dt-stat-icon {
+          width: 42px; height: 42px;
+          border-radius: 50%;
+          display: grid; place-items: center;
+          font-size: 20px;
+          flex-shrink: 0;
+        }
+        .si-blue   { background: #e8f2ff; color: var(--blue); }
+        .si-green  { background: #edf9f3; color: var(--green); }
+        .si-red    { background: #fef2f1; color: var(--red); }
+        .si-purple { background: #f3efff; color: var(--purple); }
+        .stats-footer-btn {
+          width: 100%;
+          height: 48px;
+          margin-top: 14px;
+          background: #e8f2ff;
+          color: var(--blue);
+          border: 0;
+          border-radius: 10px;
+          font-size: 15px;
+          font-weight: 800;
+          font-family: inherit;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition: background .18s;
+        }
+        .stats-footer-btn:hover { background: #d4e7ff; }
+        .weekly-card { padding: 22px 24px; }
+        .weekly-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 4px; }
+        .weekly-date {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--blue);
+          margin-bottom: 18px;
+          margin-top: 12px;
+        }
+        .weekly-card ul {
+          list-style: none;
+          padding: 0;
+          margin-bottom: 22px;
+        }
+        .weekly-card li {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 14.5px;
+          color: var(--muted);
+          font-weight: 600;
+          margin-bottom: 14px;
+          justify-content: flex-end;
+        }
+        .weekly-card li::before {
+          content: '';
+          width: 8px; height: 8px;
+          border-radius: 50%;
+          background: var(--green);
+          flex-shrink: 0;
+          order: 1;
+        }
+        .weekly-card li span { order: 0; }
+        .btn-outline-blue {
+          width: 100%;
+          height: 46px;
+          border: 1.5px solid var(--blue);
+          border-radius: 11px;
+          background: #fff;
+          color: var(--blue);
+          font-size: 15px;
+          font-weight: 700;
+          font-family: inherit;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition: background .18s;
+        }
+        .btn-outline-blue:hover { background: #e8f2ff; }
+        .newsletter-card { padding: 24px 26px; }
+        .nl-heading {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 18px;
+        }
+        .nl-heading h2 { font-size: 17.5px; font-weight: 800; }
+        .nl-cal-icon {
+          width: 44px; height: 44px;
+          border-radius: 10px;
+          background: #e8f2ff;
+          color: var(--blue);
+          display: grid; place-items: center;
+          font-size: 20px;
+          flex-shrink: 0;
+        }
+        .nl-img-wrap {
+          border-radius: 12px;
+          overflow: hidden;
+          margin-bottom: 18px;
+          height: 190px;
+        }
+        .nl-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .nl-month {
+          font-size: 18px;
+          font-weight: 800;
+          color: var(--blue);
+          margin-bottom: 8px;
+          text-align: right;
+        }
+        .nl-desc {
+          font-size: 14px;
+          line-height: 1.85;
+          color: var(--muted);
+          margin-bottom: 20px;
+          text-align: right;
+        }
+        .btn-red {
+          width: 100%;
+          height: 48px;
+          background: var(--red);
+          color: #fff;
+          border: 0;
+          border-radius: 11px;
+          font-size: 15.5px;
+          font-weight: 800;
+          font-family: inherit;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          box-shadow: 0 4px 12px rgba(232,50,42,.28);
+          margin-bottom: 18px;
+          transition: background .18s;
+        }
+        .btn-red:hover { background: #cc2820; }
+        .nl-dots {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          direction: ltr;
+        }
+        .nl-dots i { font-size: 16px; color: #9ca3af; cursor: pointer; }
+        .dot {
+          width: 9px; height: 9px;
+          border-radius: 50%;
+          background: #c8cfd8;
+        }
+        .dot.active { background: var(--red); width: 11px; height: 11px; }
+        .row2 {
+          display: grid;
+          grid-template-columns: 38% 62%;
+          gap: 22px;
+          align-items: start;
+        }
+        .resources-card { padding: 24px 26px; }
+        .resources-card h2 { font-size: 19px; font-weight: 800; }
+        .rc-heading {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        .rc-icon {
+          width: 46px; height: 46px;
+          border-radius: 10px;
+          background: #e8f2ff;
+          color: var(--blue);
+          display: grid; place-items: center;
+          font-size: 22px;
+        }
+        .resource-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+        .resource-item {
+          border: 1px solid var(--border);
+          border-radius: 11px;
+          padding: 18px 14px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          text-align: center;
+          font-size: 13px;
+          font-weight: 600;
+          color: #4b5563;
+          cursor: pointer;
+          transition: border-color .18s, box-shadow .18s;
+        }
+        .resource-item:hover { border-color: #aab6c8; box-shadow: 0 3px 10px rgba(0,0,0,.06); }
+        .resource-item i { font-size: 30px; color: var(--red); }
+        .btn-outline-red {
+          width: 100%;
+          height: 52px;
+          border: 1.5px solid var(--red);
+          border-radius: 12px;
+          background: #fff;
+          color: var(--red);
+          font-size: 15px;
+          font-weight: 800;
+          font-family: inherit;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          transition: background .18s;
+        }
+        .btn-outline-red:hover { background: #fef2f1; }
+        .app-card {
+          display: grid;
+          grid-template-columns: 42% 58%;
+          overflow: hidden;
+          background: linear-gradient(145deg, #e8f3ff 0%, #ddeeff 100%);
+          min-height: 340px;
+        }
+        .app-info {
+          padding: 32px 28px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: right;
+        }
+        .app-info h2 {
+          font-size: 26px;
+          font-weight: 900;
+          color: #0a2e54;
+          margin-bottom: 8px;
+        }
+        .app-info .app-sub {
+          font-size: 14.5px;
+          color: #4a6080;
+          margin-bottom: 22px;
+          line-height: 1.7;
+        }
+        .app-features {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 4px;
+          margin-bottom: 24px;
+        }
+        .app-feat {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          text-align: center;
+          color: #0f315c;
+        }
+        .app-feat i { font-size: 26px; display: block; }
+        .app-feat span { font-size: 11px; font-weight: 700; }
+        .app-btns {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+        .btn-app-outline {
+          height: 44px;
+          padding: 0 18px;
+          border: 1.5px solid var(--blue);
+          border-radius: 10px;
+          background: #fff;
+          color: var(--blue);
+          font-size: 14px;
+          font-weight: 700;
+          font-family: inherit;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          white-space: nowrap;
+          transition: background .18s;
+        }
+        .btn-app-outline:hover { background: #e8f2ff; }
+        .store-badge {
+          height: 44px;
+          padding: 0 14px;
+          border-radius: 10px;
+          background: #0d1117;
+          color: #fff;
+          font-size: 12.5px;
+          font-weight: 700;
+          font-family: inherit;
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+        .store-badge i { font-size: 18px; }
+        .app-img-wrap {
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+        }
+        .app-img-wrap img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: top;
+          display: block;
+        }
+        @@media (max-width:1100px) {
+          .row1, .row2 { grid-template-columns: 1fr; }
+          .dt-sub-row   { grid-template-columns: 1fr; }
+        }
+        @@media (max-width:680px) {
+          .page { padding: 0 14px 28px; }
+          .stats-grid { grid-template-columns: 1fr; }
+          .resource-grid { grid-template-columns: 1fr; }
+          .app-card { grid-template-columns: 1fr; }
+          .app-img-wrap { display: none; }
+          .app-features { grid-template-columns: repeat(2,1fr); }
+        }
+    </style>
+}
+
+<div class="page">
+    <div class="row1">
+        <div class="right-col">
+            <div class="dt-header">
+                <div class="dt-title-text">
+                    <h1>التحول الرقمي</h1>
+                    <p>نسعى لتقديم خدمات رقمية متكاملة تواكب تطلعات المواطنين ودعم رؤية 2030<br>من خلال بنية رقمية آمنة وقابلة للتطوير</p>
+                </div>
+                <div class="dt-icon-box"><i class="bi bi-graph-up-arrow"></i></div>
+            </div>
+
+            <div class="dt-sub-row">
+                <div class="card stats-card">
+                    <div class="card-heading">
+                        <h2>إحصائيات التحول الرقمي</h2>
+                        <div class="ch-icon"><i class="bi bi-bar-chart"></i></div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="dt-stat">
+                            <div class="dt-stat-text">
+                                <strong>1,248,532</strong>
+                                <small>معاملة رقمية منفذة</small>
+                            </div>
+                            <div class="dt-stat-icon si-blue"><i class="bi bi-files"></i></div>
+                        </div>
+                        <div class="dt-stat">
+                            <div class="dt-stat-text">
+                                <strong style="color:var(--green)">146</strong>
+                                <small>خدمة رقمية متاحة</small>
+                            </div>
+                            <div class="dt-stat-icon si-green"><i class="bi bi-grid"></i></div>
+                        </div>
+                        <div class="dt-stat">
+                            <div class="dt-stat-text">
+                                <strong style="color:var(--purple)">92%</strong>
+                                <small>نسبة المعاملات الرقمية</small>
+                            </div>
+                            <div class="dt-stat-icon si-purple"><i class="bi bi-pie-chart"></i></div>
+                        </div>
+                        <div class="dt-stat">
+                            <div class="dt-stat-text">
+                                <strong style="color:var(--red)">98.6%</strong>
+                                <small>معدل رضا المتعاملين</small>
+                            </div>
+                            <div class="dt-stat-icon si-red"><i class="bi bi-emoji-smile"></i></div>
+                        </div>
+                    </div>
+                    <a class="stats-footer-btn" href="/ads">
+                        <i class="bi bi-bar-chart-line"></i>عرض جميع الإحصائيات
+                    </a>
+                </div>
+
+                <div class="card weekly-card">
+                    <div class="card-heading">
+                        <h2>التقرير الأسبوعي</h2>
+                        <div class="ch-icon"><i class="bi bi-file-earmark-text"></i></div>
+                    </div>
+                    <div class="weekly-date">
+                        <i class="bi bi-calendar3"></i>
+                        <span>من 12 مايو إلى 18 مايو 2025</span>
+                    </div>
+                    <ul>
+                        <li><span>متابعة مؤشرات الأداء الرقمي</span></li>
+                        <li><span>مستجدات المشروعات والمبادرات</span></li>
+                        <li><span>أبرز الخدمات الرقمية المقدمة</span></li>
+                    </ul>
+                    <a class="btn-outline-blue" href="/org-chart">
+                        <i class="bi bi-chevron-left"></i>عرض التقرير
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card newsletter-card">
+            <div class="nl-heading">
+                <h2>النشرة الشهرية للتحول الرقمي</h2>
+                <div class="nl-cal-icon"><i class="bi bi-calendar3"></i></div>
+            </div>
+            <div class="nl-img-wrap">
+                <img src="@Asset("digital_news.jpg")" alt="النشرة الشهرية">
+            </div>
+            <div class="nl-month">مايو 2025</div>
+            <p class="nl-desc">أحدث إنجازات المحافظة في مجال الخدمات الرقمية، ومؤشرات الأداء، وأبرز المبادرات والتطورات خلال الشهر.</p>
+            <button class="btn-red">
+                <i class="bi bi-download"></i>تحميل النشرة
+            </button>
+            <div class="nl-dots">
+                <i class="bi bi-chevron-right"></i>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <i class="bi bi-chevron-left"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="row2">
+        <div class="card resources-card">
+            <div class="rc-heading">
+                <h2>التشريعات والموارد الرقمية</h2>
+                <div class="rc-icon"><i class="bi bi-scales"></i></div>
+            </div>
+            <div class="resource-grid">
+                <div class="resource-item">
+                    <i class="bi bi-journal-text"></i>
+                    <span>اللوائح والقرارات</span>
+                </div>
+                <div class="resource-item">
+                    <i class="bi bi-bank"></i>
+                    <span>القوانين المنظمة</span>
+                </div>
+                <div class="resource-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>سياسة الخصوصية</span>
+                </div>
+                <div class="resource-item">
+                    <i class="bi bi-file-text"></i>
+                    <span>اتفاقيات استخدام الخدمات</span>
+                </div>
+            </div>
+            <a class="btn-outline-red" href="/ads">
+                <i class="bi bi-chevron-left"></i>عرض جميع الموارد القانونية
+            </a>
+        </div>
+
+        <div class="card app-card">
+            <div class="app-info">
+                <h2>تطبيق القاهرة</h2>
+                <p class="app-sub">كل خدمات المحافظة بين يديك في تطبيق واحد</p>
+                <div class="app-features">
+                    <div class="app-feat">
+                        <i class="bi bi-hand-index-thumb"></i>
+                        <span>خدمات فورية</span>
+                    </div>
+                    <div class="app-feat">
+                        <i class="bi bi-bell"></i>
+                        <span>إشعارات وتنبيهات</span>
+                    </div>
+                    <div class="app-feat">
+                        <i class="bi bi-geo-alt"></i>
+                        <span>تتبع الطلبات</span>
+                    </div>
+                    <div class="app-feat">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <span>سهولة الاستخدام</span>
+                    </div>
+                </div>
+                <div class="app-btns">
+                    <a class="btn-app-outline" href="/governor">
+                        <i class="bi bi-chevron-left"></i>استكشف التطبيق
+                    </a>
+                    <div class="store-badge">
+                        <i class="bi bi-google-play"></i>Google Play
+                    </div>
+                    <div class="store-badge">
+                        <i class="bi bi-apple"></i>App Store
+                    </div>
+                </div>
+            </div>
+            <div class="app-img-wrap">
+                <img src="@Asset("digital_mobile.jpg")" alt="تطبيق القاهرة">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,229 @@
+@{
+    Layout = "~/Views/Shared/CairoGovernmentLayout.cshtml";
+    var assetBase = Url.Content("~/Cairo Government UI/assets");
+    string Asset(string fileName) => $"{assetBase}/{fileName}";
+}
+
+@section Head {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root{
+          --red:#f04438;
+          --gold:#c3912f;
+          --purple:#7b3f8c;
+          --blue:#33699a;
+          --text:#171717;
+          --muted:#737373;
+          --line:#e9e4dc;
+          --bg:#f7f7f7;
+        }
+        body{margin:0;background:var(--bg);font-family:"Cairo",Tahoma,Arial,sans-serif;color:var(--text)}
+        .page{width:min(1458px, calc(100% - 48px)); margin:23px auto 42px; background:#fff; border-radius:13px 13px 5px 5px; overflow:hidden; box-shadow:0 18px 36px rgba(17,24,39,.07)}
+
+        .hero{position:relative;min-height:334px;overflow:hidden;background:#fff}
+        .hero-left{position:absolute;inset:0 auto 0 0;width:56%;background:url('@Asset("hero-left.jpg")') center/cover no-repeat;z-index:1}
+        .hero-left:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.15) 50%,#fff 100%)}
+        .hero-right{position:absolute;top:0;right:0;width:211px;height:100%;background:url('@Asset("hero-right.jpg")') center/cover no-repeat;z-index:2}
+        .hero-right:before{content:"";position:absolute;right:100%;top:0;width:58px;height:100%;background:#fff;border-radius:0 0 0 100%;transform:translateX(29px) scaleX(.95)}
+        .hero-content{position:relative;z-index:3;min-height:334px;width:57%;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:50px}
+        .hero h1{font-size:43px;font-weight:900;letter-spacing:-1.5px;margin:4px 0 14px;color:#050505}
+        .hero .subtitle{font-size:18px;color:#595959;margin-bottom:11px;font-weight:400}
+        .hero .desc{font-size:15px;line-height:1.8;color:#6c6c6c;margin:0 auto;max-width:560px}
+        .category-tabs{position:absolute;right:50%;bottom:12px;transform:translateX(26%);display:flex;align-items:center;justify-content:center;width:668px;max-width:72vw;height:82px;background:rgba(255,255,255,.94);border:1px solid #ece8e1;border-radius:8px;box-shadow:0 10px 23px rgba(0,0,0,.07);z-index:5;overflow:hidden}
+        .tab-item{height:58px;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:#262626;font-size:15px;font-weight:500;border-left:1px solid #dedbd5;text-decoration:none}.tab-item:first-child{border-left:0}.tab-item i{font-size:25px;color:var(--gold);line-height:1}.tab-item:first-child i{color:var(--purple)}
+
+        .featured-section{background:#f9f9f9;padding:30px 70px 14px;position:relative}
+        .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}.section-title{font-size:21px;font-weight:800;margin:0}.section-title i{color:var(--gold);font-size:23px;margin-right:6px}.show-all{color:#e4463f;text-decoration:none;font-size:15px;font-weight:500;display:flex;gap:9px;align-items:center}.show-all i{font-size:16px}
+        .cards-row{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:20px;padding:0 0 2px}.place-card{background:#fff;border:1px solid #e5e5e5;border-radius:9px;overflow:hidden;box-shadow:0 4px 9px rgba(0,0,0,.08);min-height:253px}.place-card img{width:100%;height:130px;object-fit:cover;display:block}.place-body{padding:11px 17px 12px;text-align:right}.place-body h3{font-size:19px;font-weight:700;margin:0 0 6px}.place-body p{font-size:13px;line-height:1.65;color:#757575;margin:0 0 11px;min-height:40px}.location{display:flex;align-items:center;gap:6px;color:#777;font-size:12px}.location i{color:#ef4444;font-size:14px}.slider-btn{position:absolute;top:102px;width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:#ef4444;box-shadow:0 4px 10px rgba(0,0,0,.12);z-index:8;font-size:22px;display:flex;align-items:center;justify-content:center}.slider-btn.prev{left:-52px}.slider-btn.next{right:-52px}
+
+        .bottom-section{background:#fff;display:grid;grid-template-columns:1fr .82fr 1.35fr;gap:26px;padding:11px 38px 0;align-items:start}.map-card,.experiences,.visitor-box{min-height:272px}.small-title{display:flex;align-items:center;justify-content:flex-start;gap:12px;font-size:20px;font-weight:800;margin:6px 0 16px}.small-title i{font-size:28px;color:var(--gold);font-weight:400}.map-wrapper{height:260px;border-radius:10px;overflow:hidden;position:relative;box-shadow:0 4px 16px rgba(0,0,0,.12)}.map-wrapper #cairo-map{width:100%;height:100%}.map-btn{position:absolute;bottom:14px;left:14px;background:#fff;border:0;border-radius:9px;padding:8px 16px;color:#303030;font-size:14px;font-family:"Cairo",Tahoma,Arial,sans-serif;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.18);display:flex;align-items:center;gap:8px;cursor:pointer;z-index:500;transition:box-shadow .18s}.map-btn:hover{box-shadow:0 6px 18px rgba(0,0,0,.24)}.map-btn i{color:#e4463f}.leaflet-popup-content-wrapper{font-family:"Cairo",Tahoma,Arial,sans-serif;direction:rtl;text-align:right;border-radius:8px}.leaflet-popup-content{margin:10px 14px;font-size:13px}.leaflet-popup-content strong{display:block;font-size:14px;font-weight:800;margin-bottom:2px}
+        .experiences .small-title{justify-content:flex-start;margin-right:5px}.exp-list{display:flex;flex-direction:column;gap:9px}.exp-item{height:54px;background:#fff;border:1px solid #ececec;border-radius:7px;box-shadow:0 2px 6px rgba(0,0,0,.04);display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:center;padding:0 7px}.exp-item img{width:72px;height:44px;border-radius:4px;object-fit:cover}.exp-text h4{font-size:15px;font-weight:700;margin:0 0 3px}.exp-text p{font-size:12px;color:#777;margin:0}.more-link{margin:11px 13px 0 0;color:#e4463f;text-decoration:none;font-size:14px;display:inline-flex;gap:8px;align-items:center}
+        .visitor-box{background:linear-gradient(160deg,#fffdf5 0%,#fff8ec 45%,#fff 100%);border:1px solid #f1e8d7;border-radius:12px;padding:18px 23px 22px;box-shadow:0 4px 18px rgba(195,145,47,.08)}.visitor-box .small-title{justify-content:flex-start;margin:0 0 6px}.visitor-subtitle{font-size:13px;color:#8a7a60;margin:0 0 16px;padding-right:2px}.visitor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.visitor-card{position:relative;background:#fff;border:1px solid #ede8de;border-radius:10px;display:flex;align-items:center;gap:13px;padding:13px 14px;text-align:right;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;overflow:hidden}.visitor-card::before{content:"";position:absolute;inset:0;opacity:0;transition:opacity .18s ease;border-radius:10px}.visitor-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.1);border-color:transparent}.visitor-card:hover::before{opacity:1}.visitor-card:nth-child(1)::before{background:linear-gradient(135deg,rgba(51,105,154,.06),rgba(51,105,154,.02))}.visitor-card:nth-child(2)::before{background:linear-gradient(135deg,rgba(240,68,56,.06),rgba(240,68,56,.02))}.visitor-card:nth-child(3)::before{background:linear-gradient(135deg,rgba(220,63,56,.06),rgba(220,63,56,.02))}.visitor-card:nth-child(4)::before{background:linear-gradient(135deg,rgba(123,63,140,.06),rgba(123,63,140,.02))}.visitor-card-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}.visitor-card:nth-child(1) .visitor-card-icon{background:rgba(51,105,154,.1)}.visitor-card:nth-child(2) .visitor-card-icon{background:rgba(240,68,56,.1)}.visitor-card:nth-child(3) .visitor-card-icon{background:rgba(220,63,56,.1)}.visitor-card:nth-child(4) .visitor-card-icon{background:rgba(123,63,140,.1)}.visitor-card-icon i{font-size:26px}.visitor-card:nth-child(1) .visitor-card-icon i{color:var(--blue)}.visitor-card:nth-child(2) .visitor-card-icon i{color:#ee443d}.visitor-card:nth-child(3) .visitor-card-icon i{color:#dc3f38}.visitor-card:nth-child(4) .visitor-card-icon i{color:var(--purple)}.visitor-card-body{flex:1;min-width:0}.visitor-card-body h4{font-size:14px;font-weight:800;margin:0 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.visitor-card-body p{font-size:11.5px;line-height:1.5;color:#888;margin:0}.visitor-card-arrow{color:#ccc;font-size:14px;flex-shrink:0;transition:color .18s,transform .18s}.visitor-card:hover .visitor-card-arrow{color:#aaa;transform:translateX(-3px)}.visitor-stats{display:flex;gap:18px;margin:14px 0 0;padding:12px 14px;background:rgba(195,145,47,.06);border-radius:8px;border:1px solid rgba(195,145,47,.15)}.visitor-stat{flex:1;text-align:center}.visitor-stat-num{font-size:19px;font-weight:900;color:var(--gold);display:block}.visitor-stat-lbl{font-size:11px;color:#8a7a60}.cta{width:100%;height:47px;border:0;border-radius:9px;background:linear-gradient(90deg,#e8392d,#f04438);color:#fff;font-size:17px;font-weight:800;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;box-shadow:0 4px 14px rgba(240,68,56,.35);transition:box-shadow .18s,transform .18s}.cta:hover{box-shadow:0 6px 20px rgba(240,68,56,.45);transform:translateY(-1px)}.cta i{font-size:20px}
+
+        @@media (max-width:1200px){.featured-section{padding-inline:35px}.cards-row{gap:14px}.bottom-section{grid-template-columns:1fr 1fr}.visitor-box{grid-column:1/-1}.hero-content{width:70%}.category-tabs{transform:translateX(35%)}}
+        @@media (max-width:900px){.page{width:100%;margin:0;border-radius:0}.hero-left{width:100%;opacity:.28}.hero-right{display:none}.hero-content{width:100%;padding:40px 20px 120px}.category-tabs{right:20px;left:20px;bottom:20px;transform:none;width:auto;max-width:none}.cards-row{grid-template-columns:repeat(2,1fr)}.bottom-section{grid-template-columns:1fr}.visitor-grid{grid-template-columns:repeat(2,1fr)}.featured-section{padding:24px 22px}.slider-btn{display:none}}
+        @@media (max-width:520px){.hero h1{font-size:34px}.category-tabs{height:auto;flex-wrap:wrap}.tab-item{min-width:33%;padding:10px 0;border-bottom:1px solid #eee}.cards-row{grid-template-columns:1fr}.visitor-grid{grid-template-columns:1fr}.bottom-section{padding-inline:18px}}
+    </style>
+}
+
+<main class="page">
+    <section class="hero">
+        <div class="hero-left"></div>
+        <div class="hero-right"></div>
+        <div class="hero-content">
+            <h1>اكتشف القاهرة</h1>
+            <div class="subtitle">تاريخ عريق .. حضارة نابضة بالحياة</div>
+            <p class="desc">من أهرامات الجيزة ومعالم القاهرة التاريخية إلى النيل الخالد<br>تجارب سياحية متنوعة تنتظرك في قلب مصر.</p>
+        </div>
+        <nav class="category-tabs" aria-label="تصنيفات السياحة">
+            <a class="tab-item" href="#"><i class="bi bi-bank"></i><span>أماكن تاريخية</span></a>
+            <a class="tab-item" href="#"><i class="bi bi-building"></i><span>معالم دينية</span></a>
+            <a class="tab-item" href="#"><i class="bi bi-palette"></i><span>ثقافة وفنون</span></a>
+            <a class="tab-item" href="#"><i class="bi bi-camera"></i><span>تجارب ونشاطات</span></a>
+            <a class="tab-item" href="#"><i class="bi bi-geo-alt"></i><span>جولات مقترحة</span></a>
+        </nav>
+    </section>
+
+    <section class="featured-section">
+        <div class="section-head">
+            <h2 class="section-title"><i class="bi bi-stars"></i> وجهات مميزة في القاهرة</h2>
+            <a href="/org-chart" class="show-all"><i class="bi bi-chevron-left"></i>عرض الكل</a>
+        </div>
+
+        <div class="cards-row">
+            <button class="slider-btn next" aria-label="التالي"><i class="bi bi-chevron-right"></i></button>
+            <article class="place-card">
+                <img src="@Asset("card-coptic.jpg")" alt="مصر القديمة">
+                <div class="place-body">
+                    <h3>مصر القديمة</h3>
+                    <p>مزيج فريد من التاريخ القبطي والإسلامي في مكان واحد.</p>
+                    <div class="location"><i class="bi bi-geo-alt"></i><span>القاهرة</span></div>
+                </div>
+            </article>
+            <article class="place-card">
+                <img src="@Asset("card-nile.jpg")" alt="كورنيش النيل">
+                <div class="place-body">
+                    <h3>كورنيش النيل</h3>
+                    <p>إطلالة ساحرة وتجربة لا تنسى على ضفاف النيل الخالد.</p>
+                    <div class="location"><i class="bi bi-geo-alt"></i><span>القاهرة</span></div>
+                </div>
+            </article>
+            <article class="place-card">
+                <img src="@Asset("card-museum.jpg")" alt="المتحف المصري الكبير">
+                <div class="place-body">
+                    <h3>المتحف المصري الكبير</h3>
+                    <p>أكبر متحف أثري في العالم حيث تلتقي التاريخ بالحضارة.</p>
+                    <div class="location"><i class="bi bi-geo-alt"></i><span>الجيزة</span></div>
+                </div>
+            </article>
+            <article class="place-card">
+                <img src="@Asset("card-pyramids.jpg")" alt="أهرامات الجيزة">
+                <div class="place-body">
+                    <h3>أهرامات الجيزة</h3>
+                    <p>أحد عجائب الدنيا السبع وأقدم أثر تاريخي في العالم.</p>
+                    <div class="location"><i class="bi bi-geo-alt"></i><span>الجيزة</span></div>
+                </div>
+            </article>
+            <article class="place-card">
+                <img src="@Asset("card-historic.jpg")" alt="القاهرة التاريخية">
+                <div class="place-body">
+                    <h3>القاهرة التاريخية</h3>
+                    <p>رحلة عبر العصور في منطقة القاهرة الإسلامية ومساجدها العريقة.</p>
+                    <div class="location"><i class="bi bi-geo-alt"></i><span>القاهرة</span></div>
+                </div>
+            </article>
+            <button class="slider-btn prev" aria-label="السابق"><i class="bi bi-chevron-left"></i></button>
+        </div>
+    </section>
+
+    <section class="bottom-section">
+        <aside class="visitor-box">
+            <h2 class="small-title"><i class="bi bi-people"></i>للزوار</h2>
+            <p class="visitor-subtitle">كل ما تحتاجه لرحلة مثالية في القاهرة</p>
+            <div class="visitor-grid">
+                <a class="visitor-card" href="/ads">
+                    <div class="visitor-card-icon"><i class="bi bi-headset"></i></div>
+                    <div class="visitor-card-body">
+                        <h4>خدمات السياح</h4>
+                        <p>دعم ومعلومات على مدار الساعة</p>
+                    </div>
+                    <i class="bi bi-chevron-left visitor-card-arrow"></i>
+                </a>
+                <a class="visitor-card" href="/governor">
+                    <div class="visitor-card-icon"><i class="bi bi-shield-check"></i></div>
+                    <div class="visitor-card-body">
+                        <h4>الإرشادات</h4>
+                        <p>نصائح السلامة والتوجيهات المهمة</p>
+                    </div>
+                    <i class="bi bi-chevron-left visitor-card-arrow"></i>
+                </a>
+                <a class="visitor-card" href="/digital-transformation">
+                    <div class="visitor-card-icon"><i class="bi bi-calendar3"></i></div>
+                    <div class="visitor-card-body">
+                        <h4>الفعاليات</h4>
+                        <p>أبرز الأحداث والفعاليات القادمة</p>
+                    </div>
+                    <i class="bi bi-chevron-left visitor-card-arrow"></i>
+                </a>
+                <a class="visitor-card" href="/hayah-karima">
+                    <div class="visitor-card-icon"><i class="bi bi-book"></i></div>
+                    <div class="visitor-card-body">
+                        <h4>دليل الزائر</h4>
+                        <p>معلومات شاملة قبل قدومك</p>
+                    </div>
+                    <i class="bi bi-chevron-left visitor-card-arrow"></i>
+                </a>
+            </div>
+            <div class="visitor-stats">
+                <div class="visitor-stat"><span class="visitor-stat-num">+500</span><span class="visitor-stat-lbl">معلم سياحي</span></div>
+                <div class="visitor-stat"><span class="visitor-stat-num">+120</span><span class="visitor-stat-lbl">جولة مقترحة</span></div>
+                <div class="visitor-stat"><span class="visitor-stat-num">24/7</span><span class="visitor-stat-lbl">دعم الزوار</span></div>
+            </div>
+            <button class="cta"><i class="bi bi-send"></i>خطط لرحلتك الآن</button>
+        </aside>
+
+        <aside class="experiences">
+            <h2 class="small-title"><i class="bi bi-star"></i>تجارب لا تفوت</h2>
+            <div class="exp-list">
+                <div class="exp-item"><img src="@Asset("exp-boat.jpg")" alt="رحلة نيلية"><div class="exp-text"><h4>رحلة نيلية بالمركب</h4><p>استمتع بجولة ساحرة على نيل القاهرة.</p></div></div>
+                <div class="exp-item"><img src="@Asset("exp-khan.jpg")" alt="خان الخليلي"><div class="exp-text"><h4>جولة في خان الخليلي</h4><p>تجربة تسوق أصيلة في أقدم الأسواق.</p></div></div>
+                <div class="exp-item"><img src="@Asset("exp-light.jpg")" alt="عروض الصوت والضوء"><div class="exp-text"><h4>عروض الصوت والضوء</h4><p>ليلة ساحرة عند أهرام الجيزة.</p></div></div>
+            </div>
+            <a href="/org-chart" class="more-link"><i class="bi bi-chevron-left"></i>عرض المزيد</a>
+        </aside>
+
+        <aside class="map-card">
+            <h2 class="small-title"><i class="bi bi-map"></i>خريطة المعالم السياحية</h2>
+            <div class="map-wrapper">
+                <div id="cairo-map"></div>
+                <button class="map-btn" onclick="window.open('https://www.openstreetmap.org/#map=12/30.044/31.236','_blank')">
+                    <i class="bi bi-box-arrow-up-left"></i>عرض الخريطة كاملة
+                </button>
+            </div>
+        </aside>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        (function(){
+          var map = L.map('cairo-map', {
+            center: [30.044, 31.236],
+            zoom: 12,
+            zoomControl: true,
+            scrollWheelZoom: false
+          });
+
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            maxZoom: 19
+          }).addTo(map);
+
+          var redIcon = L.divIcon({
+            className: '',
+            html: '<div style="width:28px;height:28px;background:#e4463f;border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,.3)"><div style="width:8px;height:8px;background:#fff;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)"></div></div>',
+            iconSize: [28, 28],
+            iconAnchor: [14, 28],
+            popupAnchor: [0, -30]
+          });
+
+          var landmarks = [
+            { lat: 29.9792, lng: 31.1342, name: 'أهرامات الجيزة', desc: 'إحدى عجائب الدنيا السبع' },
+            { lat: 30.0478, lng: 31.2336, name: 'المتحف المصري', desc: 'أكبر متحف أثري في العالم' },
+            { lat: 30.0483, lng: 31.2625, name: 'خان الخليلي', desc: 'أشهر أسواق القاهرة التاريخية' },
+            { lat: 30.0292, lng: 31.2594, name: 'قلعة صلاح الدين', desc: 'القلعة الإسلامية التاريخية' },
+            { lat: 30.0051, lng: 31.2294, name: 'مصر القبطية', desc: 'التراث المسيحي في القاهرة' },
+            { lat: 30.0459, lng: 31.2628, name: 'مسجد الأزهر', desc: 'أقدم جامعة في العالم' },
+            { lat: 30.0626, lng: 31.2331, name: 'كورنيش النيل', desc: 'الواجهة النيلية الساحرة' }
+          ];
+
+          landmarks.forEach(function(lm){
+            L.marker([lm.lat, lm.lng], { icon: redIcon })
+              .addTo(map)
+              .bindPopup('<strong>' + lm.name + '</strong>' + lm.desc);
+          });
+        })();
+    </script>
+}
