@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ContentTargetFolders>.</ContentTargetFolders>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Product>Umbraco.BlockGrid.Example.Website</Product>
+		<PackageId>Umbraco.BlockGrid.Example.Website</PackageId>
+		<Title>Umbraco Block Grid Example Website</Title>
+		<Description>A simple Umbraco starter kit to show off the new Umbraco Block Grid editor</Description>
+		<Company>Umbraco HQ</Company>
+		<Authors>Umbraco</Authors>		
+		<PackageProjectUrl>https://github.com/warrenbuckley/UmbracoBlockGrid</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/warrenbuckley/UmbracoBlockGrid</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageIcon>UmbracoBlockGridDemoLogo.png</PackageIcon>
+		<PackageTags>Umbraco;StarterKit;Starter-Kit;BlockGrid;Block-Grid;umbraco-marketplace;</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>	
+
+	<PropertyGroup>
+		<!-- SourceLink: https://github.com/dotnet/sourcelink -->
+		<!-- Embed source files that are not tracked by the source control manager in the PDB -->
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+		<!-- SourceLink: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<!-- Deterministic Builds: https://github.com/clairernovotny/DeterministicBuilds -->
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Include files in package -->
+		<None Include="..\.github\readme-assets\UmbracoBlockGridDemoLogo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="11.0.0" />
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="11.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="App_Plugins\UmbracoBlockGrid\**" ExcludeFromSingleFile="true" CopyToPublishDirectory="Always" />
+		<None Include="buildTransitive\**" Pack="true" PackagePath="buildTransitive" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Migrations\package.zip" />
+		<EmbeddedResource Include="Migrations\package.zip" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>هيكل المحافظة - محافظة القاهرة</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red:    #e8322a;
+      --blue:   #1d5aa5;
+      --green:  #2a9a6e;
+      --gold:   #c69b48;
+      --text:   #1a1e2a;
+      --muted:  #6b7280;
+      --border: #dde4ed;
+      --conn:   #b8c8d8;   /* connector line color */
+      --shadow: 0 6px 24px rgba(16,24,40,.07);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #edf1f7;
+      color: var(--text);
+      font-family: 'Cairo', Tahoma, Arial, sans-serif;
+      direction: rtl;
+    }
+    .page {
+      max-width: 1520px;
+      margin: 24px auto;
+      padding: 0 28px 36px;
+    }
+
+    /* ══════════════ OUTER CARD ══════════════ */
+    .org-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 30px 32px 28px;
+    }
+
+    /* ══════════════ MAIN GRID ══════════════ */
+    /* RTL: first col = right (sidebar 26%), second col = left (chart 74%) */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 26% 74%;
+      gap: 36px;
+      align-items: start;
+    }
+
+    /* ══════════════ SIDEBAR ══════════════ */
+    .sidebar {}
+
+    .sidebar-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    /* RTL flex: title text (first=right), icon (second=left) */
+    .sidebar-title h1 {
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .sidebar-title p {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .sidebar-icon {
+      width: 72px; height: 72px;
+      border-radius: 14px;
+      background: var(--red);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 38px;
+      flex-shrink: 0;
+    }
+
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 20px 18px;
+    }
+    .info-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .info-heading h2 { font-size: 17px; font-weight: 800; }
+    .info-heading-icon {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      background: #fef2f1;
+      color: var(--red);
+      display: grid; place-items: center;
+      font-size: 18px;
+    }
+    .info-card > p {
+      font-size: 13.5px;
+      line-height: 1.9;
+      color: #5a6472;
+      margin-bottom: 18px;
+    }
+
+    /* Stat list */
+    .stat-list { border-top: 1px solid var(--border); padding-top: 14px; }
+    .stat-item {
+      display: grid;
+      grid-template-columns: 52px 1fr 36px;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    /* RTL grid: first col=right (number), middle=text, last col=left (icon) */
+    .s-num {
+      font-size: 22px;
+      font-weight: 900;
+      text-align: right;
+    }
+    .s-lbl { font-size: 13px; color: var(--muted); font-weight: 600; }
+    .s-ico {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: grid; place-items: center;
+      font-size: 16px;
+    }
+
+    /* Shield note */
+    .shield-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #edf9f3;
+      border: 1px solid #c2e8d6;
+      border-radius: 10px;
+      padding: 14px 14px;
+      margin-top: 6px;
+      direction: rtl;
+    }
+    .shield-note i { font-size: 26px; color: var(--green); flex-shrink: 0; }
+    .shield-note p { font-size: 12.5px; color: #3a7a5c; line-height: 1.75; font-weight: 600; }
+
+    /* ══════════════ CHART COLUMN ══════════════ */
+    .chart-col { display: flex; flex-direction: column; align-items: stretch; }
+
+    /* ────── LEVEL 1: Governor row ────── */
+    .gov-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 0;
+    }
+
+    /* Side nodes stack */
+    .side-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 0 0 auto;
+      width: 210px;
+    }
+    .side-node {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+    /* RTL: text first (right), icon second (left) */
+    .sn-icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: #edf9f3;
+      color: var(--green);
+      display: grid; place-items: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Horizontal connector from side nodes to gov box */
+    .h-conn {
+      flex: 0 0 auto;
+      width: 40px;
+      height: 2px;
+      background: var(--conn);
+      align-self: center;
+      margin-top: -4px;   /* align with approx vertical center of gov box */
+    }
+
+    /* Governor box */
+    .gov-box {
+      flex: 0 0 auto;
+      width: 160px;
+      height: 120px;
+      background: var(--red);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(232,50,42,.3);
+    }
+    .gov-box i  { font-size: 34px; }
+    .gov-box span { font-size: 15px; font-weight: 800; }
+
+    /* ────── CONNECTOR: Gov → Depts (5 branches) ────── */
+    .v-stem {
+      height: 18px;
+      display: flex;
+      justify-content: center;
+    }
+    .v-stem::before {
+      content: '';
+      width: 2px;
+      background: var(--conn);
+    }
+
+    /*
+      Tree connector: horizontal bar + branch stubs
+      Each span represents one column (same count as child grid)
+      RTL grid: first child = physical right; last child = physical left
+      ::before = horizontal bar portion for that column
+      ::after  = vertical stub down
+    */
+    .tree-conn {
+      display: grid;
+      gap: 0;
+      height: 22px;
+    }
+    .tc-5 { grid-template-columns: repeat(5, 1fr); }
+    .tc-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .tree-conn > span { position: relative; }
+
+    /* Horizontal bar: first-child (physical right) extends leftward from center */
+    .tree-conn > span:first-child::before  { left: 0;   right: 50%; }
+    /* last-child (physical left) extends rightward from center */
+    .tree-conn > span:last-child::before   { left: 50%; right: 0;   }
+    /* middle children: full span */
+    .tree-conn > span:not(:first-child):not(:last-child)::before { left: 0; right: 0; }
+
+    .tree-conn > span::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      height: 2px;
+      background: var(--conn);
+    }
+    /* Vertical stub down */
+    .tree-conn > span::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      background: var(--conn);
+    }
+
+    /* ────── LEVEL 2: Department row ────── */
+    .dept-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .dept-card {
+      background: #fff;
+      border: 1.5px solid #c8d8ec;
+      border-radius: 11px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,.06);
+    }
+    .dept-head {
+      background: #e8f2ff;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--blue);
+      min-height: 52px;
+      border-bottom: 1px solid #c8d8ec;
+    }
+    .dept-head i { font-size: 20px; flex-shrink: 0; }
+    .dept-card ul {
+      list-style: none;
+      padding: 10px 14px 12px;
+      margin: 0;
+    }
+    .dept-card li {
+      font-size: 12px;
+      color: #4a5568;
+      padding: 4px 0;
+      border-bottom: 1px dashed #edf0f4;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+    .dept-card li:last-child { border-bottom: 0; }
+    .dept-card li::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #9bb8d4;
+      flex-shrink: 0;
+      order: 1;
+    }
+
+    /* ────── CONNECTOR: Depts → Lower entities ────── */
+    /* Same pattern as gov-to-dept */
+
+    /* ────── LEVEL 3: Lower entities ────── */
+    .lower-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .lower-card {
+      background: #edf9f3;
+      border: 1.5px solid #b2dfc8;
+      border-radius: 11px;
+      padding: 14px 14px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 3px 10px rgba(42,154,110,.08);
+    }
+    /* RTL: text first (right), icon second (left) */
+    .lower-text { text-align: right; }
+    .lower-text h4 { font-size: 14px; font-weight: 800; color: #1a5c3a; margin-bottom: 3px; }
+    .lower-text small { font-size: 12px; color: var(--green); font-weight: 600; }
+    .lower-icon {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      background: rgba(42,154,110,.14);
+      color: var(--green);
+      display: grid; place-items: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    /* ────── LEVEL 4: Principles row ────── */
+    .principles-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0 16px;
+    }
+    .principles-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .principle-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 16px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    }
+    /* RTL: text first (right), icon second (left) */
+    .pr-text { text-align: right; }
+    .pr-text h4 { font-size: 14.5px; font-weight: 800; margin-bottom: 4px; }
+    .pr-text p  { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .pr-icon {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width:1200px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .dept-row, .lower-row { grid-template-columns: 1fr 1fr; }
+      .principles-row { grid-template-columns: 1fr 1fr; }
+      .gov-row { flex-wrap: wrap; justify-content: center; }
+      .side-stack { width: auto; flex: 0 0 180px; }
+    }
+    @media (max-width:700px) {
+      .page { padding: 0 12px 24px; }
+      .dept-row, .lower-row, .principles-row { grid-template-columns: 1fr; }
+      .side-stack { width: 100%; flex: 1 1 100%; }
+      .h-conn { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="org-card">
+    <div class="main-grid">
+
+      <!-- ══════ RIGHT COLUMN: Sidebar (first = right in RTL) ══════ -->
+      <aside class="sidebar">
+
+        <!-- Title row -->
+        <div class="sidebar-title">
+          <div>
+            <h1>هيكل المحافظة</h1>
+            <p>الهيكل التنظيمي لمحافظة القاهرة والجهات التابعة لها</p>
+          </div>
+          <div class="sidebar-icon"><i class="bi bi-bank"></i></div>
+        </div>
+
+        <!-- Info card -->
+        <div class="info-card">
+          <div class="info-heading">
+            <!-- RTL: title first (right), icon second (left) -->
+            <h2>نبذة عن الهيكل التنظيمي</h2>
+            <div class="info-heading-icon"><i class="bi bi-diagram-3"></i></div>
+          </div>
+          <p>يهدف الهيكل التنظيمي لمحافظة القاهرة إلى تحقيق أعلى درجات الكفاءة في تقديم الخدمات للمواطنين، من خلال توزيع واضح للمهام والمسؤوليات بين الإدارات والجهات التابعة.</p>
+
+          <!-- Stat list: RTL grid 3-col → number(right) | label(center) | icon(left) -->
+          <div class="stat-list">
+            <div class="stat-item">
+              <span class="s-num" style="color:var(--red)">5</span>
+              <span class="s-lbl">إجمالي القطاعات الرئيسية</span>
+              <div class="s-ico" style="background:#e8f2ff;color:var(--blue)"><i class="bi bi-diagram-3"></i></div>
+            </div>
+            <div class="stat-item">
+              <span class="s-num" style="color:var(--green)">25+</span>
+              <span class="s-lbl">إجمالي الإدارات العامة</span>
+              <div class="s-ico" style="background:#edf9f3;color:var(--green)"><i class="bi bi-people"></i></div>
+            </div>
+            <div class="stat-item">
+              <span class="s-num" style="color:var(--blue)">71+</span>
+              <span class="s-lbl">إجمالي الجهات التابعة</span>
+              <div class="s-ico" style="background:#e8f2ff;color:var(--blue)"><i class="bi bi-buildings"></i></div>
+            </div>
+            <div class="stat-item" style="margin-bottom:0">
+              <span class="s-num" style="color:var(--red)">32K+</span>
+              <span class="s-lbl">إجمالي العاملين</span>
+              <div class="s-ico" style="background:#fef2f1;color:var(--red)"><i class="bi bi-person-fill"></i></div>
+            </div>
+          </div>
+
+          <!-- Shield note -->
+          <div class="shield-note">
+            <i class="bi bi-shield-check"></i>
+            <p>يعمل جميع قطاعات المحافظة بتكامل لتحقيق رؤية محافظة القاهرة في التنمية المستدامة وجودة الحياة</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ══════ LEFT COLUMN: Chart (second = left in RTL) ══════ -->
+      <div class="chart-col">
+
+        <!-- ── Level 1: Governor + side nodes ── -->
+        <!--
+          RTL flex row, first=right:
+          1. Right side nodes (الإدارة العامة, إدارة المتابعة)
+          2. h-conn
+          3. Gov box
+          4. h-conn
+          5. Left side nodes (المكتب الفني, مكتب المحافظ)
+        -->
+        <div class="gov-row">
+          <div class="side-stack">
+            <div class="side-node">
+              <span>الإدارة العامة للشؤون القانونية</span>
+              <div class="sn-icon"><i class="bi bi-shield-check"></i></div>
+            </div>
+            <div class="side-node">
+              <span>إدارة المتابعة والتفتيش</span>
+              <div class="sn-icon"><i class="bi bi-shield-exclamation"></i></div>
+            </div>
+          </div>
+          <div class="h-conn"></div>
+          <div class="gov-box">
+            <i class="bi bi-person"></i>
+            <span>محافظ القاهرة</span>
+          </div>
+          <div class="h-conn"></div>
+          <div class="side-stack">
+            <div class="side-node">
+              <span>المكتب الفني</span>
+              <div class="sn-icon"><i class="bi bi-card-checklist"></i></div>
+            </div>
+            <div class="side-node">
+              <span>مكتب محافظ القاهرة</span>
+              <div class="sn-icon"><i class="bi bi-person-gear"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Gov → Dept connector ── -->
+        <div class="v-stem"></div>
+        <div class="tree-conn tc-5">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <!-- ── Level 2: 5 Departments ── -->
+        <!--
+          RTL grid first=rightmost:
+          1. السكرتير العام
+          2. السكرتير العام المساعد
+          3. مديرية الخدمات
+          4. مديرية الهندسة
+          5. مديرية الشؤون المالية والإدارية
+        -->
+        <div class="dept-row">
+
+          <div class="dept-card">
+            <div class="dept-head">
+              <span>السكرتير العام</span>
+              <i class="bi bi-people"></i>
+            </div>
+            <ul>
+              <li><span>إدارة السكرتارية</span></li>
+              <li><span>إدارة الشؤون الإدارية</span></li>
+              <li><span>إدارة الموارد البشرية</span></li>
+              <li><span>إدارة العلاقات العامة</span></li>
+              <li><span>إدارة الأزمات والكوارث</span></li>
+            </ul>
+          </div>
+
+          <div class="dept-card">
+            <div class="dept-head">
+              <span>السكرتير العام المساعد</span>
+              <i class="bi bi-person-badge"></i>
+            </div>
+            <ul>
+              <li><span>إدارة التخطيط والمتابعة</span></li>
+              <li><span>إدارة المشروعات</span></li>
+              <li><span>إدارة التنمية المحلية</span></li>
+              <li><span>إدارة التمويل والاستثمار</span></li>
+              <li><span>إدارة المعلومات والتحول الرقمي</span></li>
+            </ul>
+          </div>
+
+          <div class="dept-card">
+            <div class="dept-head">
+              <span>مديرية الخدمات</span>
+              <i class="bi bi-gear"></i>
+            </div>
+            <ul>
+              <li><span>مديرية الشؤون الصحية</span></li>
+              <li><span>مديرية التربية والتعليم</span></li>
+              <li><span>مديرية التضامن الاجتماعي</span></li>
+              <li><span>مديرية الشباب والرياضة</span></li>
+              <li><span>مديرية التموين والتجارة الداخلية</span></li>
+            </ul>
+          </div>
+
+          <div class="dept-card">
+            <div class="dept-head">
+              <span>مديرية الهندسة</span>
+              <i class="bi bi-buildings"></i>
+            </div>
+            <ul>
+              <li><span>إدارة التخطيط العمراني</span></li>
+              <li><span>إدارة المتابعة الميدانية</span></li>
+              <li><span>إدارة التنظيم والإشغالات</span></li>
+              <li><span>إدارة الطرق والكباري</span></li>
+              <li><span>إدارة المرافق</span></li>
+            </ul>
+          </div>
+
+          <div class="dept-card">
+            <div class="dept-head">
+              <span>مديرية الشؤون المالية والإدارية</span>
+              <i class="bi bi-layers"></i>
+            </div>
+            <ul>
+              <li><span>إدارة الميزانية والحسابات</span></li>
+              <li><span>إدارة المشتريات والمخازن</span></li>
+              <li><span>إدارة الأصول والممتلكات</span></li>
+              <li><span>إدارة الخدمات الإدارية</span></li>
+              <li><span>إدارة الشؤون المالية</span></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- ── Dept → Lower entities connector ── -->
+        <div class="v-stem"></div>
+        <div class="tree-conn tc-5">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <!-- ── Level 3: Lower entities ── -->
+        <!--
+          RTL grid first=rightmost:
+          1. الأحياء (16 حي)
+          2. المراكز التكنولوجية (9 مراكز)
+          3. المجالس المحلية (32 مجلس)
+          4. الوحدات المحلية القروية (6 وحدات)
+          5. الهيئات والمؤسسات (18 هيئة)
+        -->
+        <div class="lower-row">
+
+          <div class="lower-card">
+            <div class="lower-text">
+              <h4>الأحياء</h4>
+              <small>16 حي</small>
+            </div>
+            <div class="lower-icon"><i class="bi bi-geo-alt"></i></div>
+          </div>
+
+          <div class="lower-card">
+            <div class="lower-text">
+              <h4>المراكز التكنولوجية</h4>
+              <small>عدد 9 مراكز</small>
+            </div>
+            <div class="lower-icon"><i class="bi bi-share"></i></div>
+          </div>
+
+          <div class="lower-card">
+            <div class="lower-text">
+              <h4>المجالس المحلية</h4>
+              <small>عدد 32 مجلس</small>
+            </div>
+            <div class="lower-icon"><i class="bi bi-people"></i></div>
+          </div>
+
+          <div class="lower-card">
+            <div class="lower-text">
+              <h4>الوحدات المحلية القروية</h4>
+              <small>عدد 6 وحدات</small>
+            </div>
+            <div class="lower-icon"><i class="bi bi-building"></i></div>
+          </div>
+
+          <div class="lower-card">
+            <div class="lower-text">
+              <h4>الهيئات والمؤسسات</h4>
+              <small>عدد 18 هيئة</small>
+            </div>
+            <div class="lower-icon"><i class="bi bi-bank"></i></div>
+          </div>
+
+        </div>
+
+        <!-- ── Divider ── -->
+        <div class="principles-divider"></div>
+
+        <!-- ── Level 4: Principles row ── -->
+        <!--
+          RTL grid first=rightmost:
+          1. خدمة المواطن
+          2. كفاءة تشغيلية
+          3. تنسيق وتكامل
+          4. حوكمة وشفافية
+        -->
+        <div class="principles-row">
+
+          <div class="principle-card">
+            <div class="pr-text">
+              <h4>خدمة المواطن</h4>
+              <p>تركيز على تلبية احتياجات المواطنين وتطوير الخدمات</p>
+            </div>
+            <div class="pr-icon" style="background:#fef2f1;color:var(--red)">
+              <i class="bi bi-person"></i>
+            </div>
+          </div>
+
+          <div class="principle-card">
+            <div class="pr-text">
+              <h4>كفاءة تشغيلية</h4>
+              <p>توزيع أمثل للموارد وتحسين جودة الخدمات</p>
+            </div>
+            <div class="pr-icon" style="background:#fef2f1;color:var(--red)">
+              <i class="bi bi-bullseye"></i>
+            </div>
+          </div>
+
+          <div class="principle-card">
+            <div class="pr-text">
+              <h4>تنسيق وتكامل</h4>
+              <p>تكامل بين القطاعات لتحقيق أهداف المحافظة</p>
+            </div>
+            <div class="pr-icon" style="background:#fef2f1;color:var(--red)">
+              <i class="bi bi-diagram-3"></i>
+            </div>
+          </div>
+
+          <div class="principle-card">
+            <div class="pr-text">
+              <h4>حوكمة وشفافية</h4>
+              <p>هيكل واضح يضمن المساءلة والشفافية في الأداء</p>
+            </div>
+            <div class="pr-icon" style="background:#edf9f3;color:var(--green)">
+              <i class="bi bi-shield-check"></i>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end chart-col -->
+
+    </div><!-- end main-grid -->
+  </div><!-- end org-card -->
+</div><!-- end page -->
+</body>
+</html>
