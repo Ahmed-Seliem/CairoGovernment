@@ -4,7 +4,7 @@ namespace UmbracoBlockGrid.Site.Controllers;
 
 public class CairoGovernmentController : Controller
 {
-    [HttpGet("")]
+    [HttpGet("cairo-home-static")]
     public IActionResult Index()
     {
         SetPageMeta("اكتشف القاهرة", "home");

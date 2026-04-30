@@ -1,0 +1,41 @@
+﻿@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    Link? GetLink(string alias) => Model.Content.Value<IEnumerable<Link>>(alias)?.FirstOrDefault();
+    var title = Model.Content.Value<string>("title");
+    var subtitle = Model.Content.Value<string>("subtitle");
+    var address = Model.Content.Value<string>("address");
+    var phone = Model.Content.Value<string>("phone");
+    var email = Model.Content.Value<string>("email");
+    var mapLink = GetLink("mapLink");
+    var facebook = GetLink("facebookLink");
+    var instagram = GetLink("instagramLink");
+    var youtube = GetLink("youtubeLink");
+    var x = GetLink("xLink");
+}
+<section class="cg-panel cg-contact">
+    <div class="cg-contact__grid">
+        <div class="cg-contact__card">
+            @if (!string.IsNullOrWhiteSpace(title)) { <h2 class="cg-contact__title">@title</h2> }
+            @if (!string.IsNullOrWhiteSpace(subtitle)) { <p class="cg-contact__text">@subtitle</p> }
+            <div class="cg-contact__list">
+                @if (!string.IsNullOrWhiteSpace(address)) { <div class="cg-contact__item"><i class="bi bi-geo-alt"></i><span>@address</span></div> }
+                @if (!string.IsNullOrWhiteSpace(phone)) { <a class="cg-contact__item" href="tel:@phone"><i class="bi bi-telephone"></i><span>@phone</span></a> }
+                @if (!string.IsNullOrWhiteSpace(email)) { <a class="cg-contact__item" href="mailto:@email"><i class="bi bi-envelope"></i><span>@email</span></a> }
+            </div>
+            <div class="cg-contact__socials">
+                @if (facebook is not null) { <a class="cg-contact__social" href="@facebook.Url" target="@facebook.Target"><i class="bi bi-facebook"></i></a> }
+                @if (instagram is not null) { <a class="cg-contact__social" href="@instagram.Url" target="@instagram.Target"><i class="bi bi-instagram"></i></a> }
+                @if (youtube is not null) { <a class="cg-contact__social" href="@youtube.Url" target="@youtube.Target"><i class="bi bi-youtube"></i></a> }
+                @if (x is not null) { <a class="cg-contact__social" href="@x.Url" target="@x.Target"><i class="bi bi-twitter-x"></i></a> }
+            </div>
+        </div>
+        <div class="cg-contact__map">
+            <h3 class="cg-section-title" style="margin-bottom:10px">موقع المحافظة</h3>
+            <p>أضف رابط الخريطة من Backoffice ليظهر هنا زر مباشر للوصول أو الاتجاهات.</p>
+            @if (mapLink is not null) { <a class="cg-btn-primary" href="@mapLink.Url" target="@mapLink.Target">@(string.IsNullOrWhiteSpace(mapLink.Name) ? "فتح الخريطة" : mapLink.Name)</a> }
+        </div>
+    </div>
+</section>

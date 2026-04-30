@@ -1,0 +1,34 @@
+@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var title = Model.Content.Value<string>("title");
+    var subtitle = Model.Content.Value<string>("subtitle");
+    var description = Model.Content.Value<string>("description");
+    var backgroundImage = Model.Content.Value<IPublishedContent>("backgroundImage");
+    var sideImage = Model.Content.Value<IPublishedContent>("sideImage");
+    var primaryLink = Model.Content.Value<IEnumerable<Link>>("primaryLink")?.FirstOrDefault();
+    var secondaryLink = Model.Content.Value<IEnumerable<Link>>("secondaryLink")?.FirstOrDefault();
+    var assetRoot = "/Cairo Government UI/assets";
+    var backgroundImageUrl = backgroundImage?.Url() ?? $"{assetRoot}/hero-left.jpg";
+    var sideImageUrl = sideImage?.Url() ?? $"{assetRoot}/hero-right.jpg";
+}
+<section class="cg-panel cg-home-hero">
+    <div class="cg-home-hero__media-left" style="background-image:url('@backgroundImageUrl')"></div>
+    <div class="cg-home-hero__media-right" style="background-image:url('@sideImageUrl')"></div>
+    <div class="cg-home-hero__content">
+        @if (!string.IsNullOrWhiteSpace(title)) { <h1 class="cg-home-hero__title">@title</h1> }
+        @if (!string.IsNullOrWhiteSpace(subtitle)) { <p class="cg-home-hero__subtitle">@subtitle</p> }
+        @if (!string.IsNullOrWhiteSpace(description)) { <p class="cg-home-hero__description">@description</p> }
+        @if (primaryLink is not null || secondaryLink is not null)
+        {
+            <div class="cg-home-hero__actions">
+                @if (primaryLink is not null) { <a class="cg-btn-primary" href="@primaryLink.Url" target="@primaryLink.Target">@(string.IsNullOrWhiteSpace(primaryLink.Name) ? "اكتشف المزيد" : primaryLink.Name)</a> }
+                @if (secondaryLink is not null) { <a class="cg-btn-secondary" href="@secondaryLink.Url" target="@secondaryLink.Target">@(string.IsNullOrWhiteSpace(secondaryLink.Name) ? "اعرف أكثر" : secondaryLink.Name)</a> }
+            </div>
+        }
+    </div>
+</section>

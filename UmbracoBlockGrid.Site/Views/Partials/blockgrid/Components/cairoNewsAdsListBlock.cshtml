@@ -1,0 +1,32 @@
+﻿@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var title = Model.Content.Value<string>("title");
+    var subtitle = Model.Content.Value<string>("subtitle");
+    var featuredTitle = Model.Content.Value<string>("featuredTitle");
+    var featuredText = Model.Content.Value<string>("featuredText");
+    var featuredMeta = Model.Content.Value<string>("featuredMeta");
+    var featuredLink = Model.Content.Value<IEnumerable<Link>>("featuredLink")?.FirstOrDefault();
+}
+<section class="cg-panel cg-news">
+    <div class="cg-section-head">
+        <div>
+            @if (!string.IsNullOrWhiteSpace(title)) { <h2 class="cg-section-title">@title</h2> }
+            @if (!string.IsNullOrWhiteSpace(subtitle)) { <p class="cg-section-subtitle">@subtitle</p> }
+        </div>
+    </div>
+    <div class="cg-news__grid">
+        <div class="cg-news__featured">
+            <span class="cg-news__featured-badge"><i class="bi bi-star-fill"></i>محتوى مميز</span>
+            @if (!string.IsNullOrWhiteSpace(featuredTitle)) { <h3 class="cg-news__featured-title">@featuredTitle</h3> }
+            @if (!string.IsNullOrWhiteSpace(featuredText)) { <p class="cg-news__featured-text">@featuredText</p> }
+            @if (!string.IsNullOrWhiteSpace(featuredMeta)) { <div class="cg-news__featured-meta">@featuredMeta</div> }
+            @if (featuredLink is not null) { <div style="margin-top:20px"><a class="cg-btn-primary" href="@featuredLink.Url" target="@featuredLink.Target">@(string.IsNullOrWhiteSpace(featuredLink.Name) ? "عرض التفاصيل" : featuredLink.Name)</a></div> }
+        </div>
+        <div class="cg-news__list">
+            @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+        </div>
+    </div>
+</section>

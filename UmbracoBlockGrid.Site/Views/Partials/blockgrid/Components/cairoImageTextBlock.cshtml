@@ -1,0 +1,48 @@
+@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    string? ResolveFallbackImage(string? first, string? second, string? third)
+    {
+        var key = $"{first} {second} {third}".ToLowerInvariant();
+        var assetRoot = "/Cairo Government UI/assets";
+
+        if (key.Contains("تحول") || key.Contains("رقمي")) return $"{assetRoot}/Digitial_Transformation.jpeg";
+        if (key.Contains("المحافظ")) return $"{assetRoot}/Governor-page.jpeg";
+        if (key.Contains("حياة كريمة")) return $"{assetRoot}/Hayah-Karima.jpeg";
+        if (key.Contains("الهيكل")) return $"{assetRoot}/Org_Chart.jpeg";
+
+        return null;
+    }
+
+    var eyebrow = Model.Content.Value<string>("eyebrow");
+    var title = Model.Content.Value<string>("title");
+    var subtitle = Model.Content.Value<string>("subtitle");
+    var text = Model.Content.Value<string>("text");
+    var image = Model.Content.Value<IPublishedContent>("image");
+    var primaryLink = Model.Content.Value<IEnumerable<Link>>("primaryLink")?.FirstOrDefault();
+    var secondaryLink = Model.Content.Value<IEnumerable<Link>>("secondaryLink")?.FirstOrDefault();
+    var reverseLayout = Model.Content.Value<bool>("reverseLayout");
+    var imageUrl = image?.Url() ?? ResolveFallbackImage(eyebrow, title, subtitle);
+}
+<section class="cg-panel cg-image-text @(reverseLayout ? "is-reversed" : null)">
+    <div class="cg-image-text__media">
+        @if (!string.IsNullOrWhiteSpace(imageUrl)) { <img src="@imageUrl" alt="@title" /> }
+    </div>
+    <div class="cg-image-text__content">
+        @if (!string.IsNullOrWhiteSpace(eyebrow)) { <span class="cg-image-text__eyebrow"><i class="bi bi-stars"></i>@eyebrow</span> }
+        @if (!string.IsNullOrWhiteSpace(title)) { <h2 class="cg-image-text__title">@title</h2> }
+        @if (!string.IsNullOrWhiteSpace(subtitle)) { <p class="cg-image-text__subtitle">@subtitle</p> }
+        @if (!string.IsNullOrWhiteSpace(text)) { <p class="cg-image-text__text">@text</p> }
+        @if (primaryLink is not null || secondaryLink is not null)
+        {
+            <div class="cg-image-text__actions">
+                @if (primaryLink is not null) { <a class="cg-btn-primary" href="@primaryLink.Url" target="@primaryLink.Target">@(string.IsNullOrWhiteSpace(primaryLink.Name) ? "استكشف" : primaryLink.Name)</a> }
+                @if (secondaryLink is not null) { <a class="cg-btn-secondary" href="@secondaryLink.Url" target="@secondaryLink.Target">@(string.IsNullOrWhiteSpace(secondaryLink.Name) ? "اعرف أكثر" : secondaryLink.Name)</a> }
+            </div>
+        }
+    </div>
+</section>

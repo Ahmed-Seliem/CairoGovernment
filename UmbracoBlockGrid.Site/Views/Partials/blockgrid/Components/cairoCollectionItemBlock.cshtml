@@ -1,0 +1,61 @@
+@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    string? ResolveFallbackImage(string? first, string? second, string? third)
+    {
+        var key = $"{first} {second} {third}".ToLowerInvariant();
+        var assetRoot = "/Cairo Government UI/assets";
+
+        if (key.Contains("مصر القديمة") || key.Contains("قبط")) return $"{assetRoot}/card-coptic.jpg";
+        if (key.Contains("كورنيش") || key.Contains("النيل")) return $"{assetRoot}/card-nile.jpg";
+        if (key.Contains("المتحف")) return $"{assetRoot}/card-museum.jpg";
+        if (key.Contains("أهرامات") || key.Contains("الجيزة")) return $"{assetRoot}/card-pyramids.jpg";
+        if (key.Contains("التاريخية")) return $"{assetRoot}/card-historic.jpg";
+        if (key.Contains("رحلة نيلية") || key.Contains("المركب")) return $"{assetRoot}/exp-boat.jpg";
+        if (key.Contains("خان الخليلي") || key.Contains("خان")) return $"{assetRoot}/exp-khan.jpg";
+        if (key.Contains("الصوت") || key.Contains("الضوء")) return $"{assetRoot}/exp-light.jpg";
+        if (key.Contains("تحول") || key.Contains("رقمي")) return $"{assetRoot}/digital_news.jpg";
+        if (key.Contains("المحافظ")) return $"{assetRoot}/governor_photo.jpg";
+        if (key.Contains("حياة كريمة")) return $"{assetRoot}/hayah_hero.jpg";
+        if (key.Contains("الهيكل")) return $"{assetRoot}/Org_Chart.jpeg";
+
+        return null;
+    }
+
+    var title = Model.Content.Value<string>("title");
+    var text = Model.Content.Value<string>("text");
+    var meta = Model.Content.Value<string>("meta");
+    var badge = Model.Content.Value<string>("badge");
+    var iconClass = Model.Content.Value<string>("iconClass");
+    var altText = Model.Content.Value<string>("altText");
+    var image = Model.Content.Value<IPublishedContent>("image");
+    var link = Model.Content.Value<IEnumerable<Link>>("link")?.FirstOrDefault();
+    var imageUrl = image?.Url() ?? ResolveFallbackImage(title, meta, text);
+    var imageAlt = string.IsNullOrWhiteSpace(altText) ? title : altText;
+}
+@if (link is not null)
+{
+    <a class="cg-collection-item" href="@link.Url" target="@link.Target">
+        @if (!string.IsNullOrWhiteSpace(imageUrl)) { <div class="cg-collection-item__media"><img src="@imageUrl" alt="@imageAlt" /></div> }
+        @if (!string.IsNullOrWhiteSpace(iconClass)) { <div class="cg-collection-item__icon"><i class="bi @iconClass"></i></div> }
+        @if (!string.IsNullOrWhiteSpace(badge)) { <span class="cg-collection-item__badge">@badge</span> }
+        @if (!string.IsNullOrWhiteSpace(title)) { <h3 class="cg-collection-item__title">@title</h3> }
+        @if (!string.IsNullOrWhiteSpace(meta)) { <p class="cg-collection-item__meta">@meta</p> }
+        @if (!string.IsNullOrWhiteSpace(text)) { <p class="cg-collection-item__text">@text</p> }
+    </a>
+}
+else
+{
+    <article class="cg-collection-item">
+        @if (!string.IsNullOrWhiteSpace(imageUrl)) { <div class="cg-collection-item__media"><img src="@imageUrl" alt="@imageAlt" /></div> }
+        @if (!string.IsNullOrWhiteSpace(iconClass)) { <div class="cg-collection-item__icon"><i class="bi @iconClass"></i></div> }
+        @if (!string.IsNullOrWhiteSpace(badge)) { <span class="cg-collection-item__badge">@badge</span> }
+        @if (!string.IsNullOrWhiteSpace(title)) { <h3 class="cg-collection-item__title">@title</h3> }
+        @if (!string.IsNullOrWhiteSpace(meta)) { <p class="cg-collection-item__meta">@meta</p> }
+        @if (!string.IsNullOrWhiteSpace(text)) { <p class="cg-collection-item__text">@text</p> }
+    </article>
+}

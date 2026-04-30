@@ -1,0 +1,10 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var question = Model.Content.Value<string>("question");
+    var answer = Model.Content.Value<string>("answer");
+}
+<article class="cg-faq-item">
+    @if (!string.IsNullOrWhiteSpace(question)) { <h3 class="cg-faq-item__question">@question</h3> }
+    @if (!string.IsNullOrWhiteSpace(answer)) { <p class="cg-faq-item__answer">@answer</p> }
+</article>

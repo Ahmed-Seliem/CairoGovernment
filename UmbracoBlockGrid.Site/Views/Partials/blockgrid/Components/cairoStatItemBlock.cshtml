@@ -1,0 +1,14 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var value = Model.Content.Value<string>("value");
+    var label = Model.Content.Value<string>("label");
+    var iconClass = Model.Content.Value<string>("iconClass");
+}
+<div class="cg-stat-item">
+    <div>
+        @if (!string.IsNullOrWhiteSpace(value)) { <p class="cg-stat-item__value">@value</p> }
+        @if (!string.IsNullOrWhiteSpace(label)) { <p class="cg-stat-item__label">@label</p> }
+    </div>
+    @if (!string.IsNullOrWhiteSpace(iconClass)) { <div class="cg-stat-item__icon"><i class="bi @iconClass"></i></div> }
+</div>

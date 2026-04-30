@@ -1,0 +1,21 @@
+﻿@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var title = Model.Content.Value<string>("title");
+    var text = Model.Content.Value<string>("text");
+    var primaryLink = Model.Content.Value<IEnumerable<Link>>("primaryLink")?.FirstOrDefault();
+    var secondaryLink = Model.Content.Value<IEnumerable<Link>>("secondaryLink")?.FirstOrDefault();
+}
+<section class="cg-panel cg-cta">
+    @if (!string.IsNullOrWhiteSpace(title)) { <h2 class="cg-cta__title">@title</h2> }
+    @if (!string.IsNullOrWhiteSpace(text)) { <p class="cg-cta__text">@text</p> }
+    @if (primaryLink is not null || secondaryLink is not null)
+    {
+        <div class="cg-cta__actions">
+            @if (primaryLink is not null) { <a class="cg-btn-primary" href="@primaryLink.Url" target="@primaryLink.Target">@(string.IsNullOrWhiteSpace(primaryLink.Name) ? "ابدأ الآن" : primaryLink.Name)</a> }
+            @if (secondaryLink is not null) { <a class="cg-btn-secondary" href="@secondaryLink.Url" target="@secondaryLink.Target">@(string.IsNullOrWhiteSpace(secondaryLink.Name) ? "تفاصيل" : secondaryLink.Name)</a> }
+        </div>
+    }
+</section>

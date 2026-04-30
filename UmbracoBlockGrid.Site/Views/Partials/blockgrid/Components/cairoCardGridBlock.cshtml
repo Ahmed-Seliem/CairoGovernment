@@ -1,0 +1,19 @@
+﻿@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var title = Model.Content.Value<string>("title");
+    var subtitle = Model.Content.Value<string>("subtitle");
+    var ctaLink = Model.Content.Value<IEnumerable<Link>>("ctaLink")?.FirstOrDefault();
+}
+<section class="cg-panel cg-card-grid">
+    <div class="cg-section-head">
+        <div>
+            @if (!string.IsNullOrWhiteSpace(title)) { <h2 class="cg-section-title">@title</h2> }
+            @if (!string.IsNullOrWhiteSpace(subtitle)) { <p class="cg-section-subtitle">@subtitle</p> }
+        </div>
+        @if (ctaLink is not null) { <a class="cg-section-link" href="@ctaLink.Url" target="@ctaLink.Target">@(string.IsNullOrWhiteSpace(ctaLink.Name) ? "عرض الكل" : ctaLink.Name)<i class="bi bi-chevron-left"></i></a> }
+    </div>
+    @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+</section>

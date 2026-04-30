@@ -1,0 +1,20 @@
+﻿@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var title = Model.Content.Value<string>("title");
+    var subtitle = Model.Content.Value<string>("subtitle");
+}
+<section class="cg-panel cg-tabs">
+    @if (!string.IsNullOrWhiteSpace(title) || !string.IsNullOrWhiteSpace(subtitle))
+    {
+        <div class="cg-section-head">
+            <div>
+                @if (!string.IsNullOrWhiteSpace(title)) { <h2 class="cg-section-title">@title</h2> }
+                @if (!string.IsNullOrWhiteSpace(subtitle)) { <p class="cg-section-subtitle">@subtitle</p> }
+            </div>
+        </div>
+    }
+    @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+</section>
