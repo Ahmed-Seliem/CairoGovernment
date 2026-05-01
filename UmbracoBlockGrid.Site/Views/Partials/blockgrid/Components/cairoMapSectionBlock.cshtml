@@ -1,0 +1,30 @@
+@using System.Linq
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@{
+    var title = Model.Content.Value<string>("title");
+    var subtitle = Model.Content.Value<string>("subtitle");
+    var image = Model.Content.Value<IPublishedContent>("image");
+    var primaryLink = Model.Content.Value<IEnumerable<Link>>("primaryLink")?.FirstOrDefault();
+    var imageUrl = image?.Url() ?? "/Cairo Government UI/assets/map.jpg";
+    var linkUrl = primaryLink?.Url ?? "https://www.openstreetmap.org/#map=12/30.044/31.236";
+    var linkTarget = primaryLink?.Target;
+    var linkName = string.IsNullOrWhiteSpace(primaryLink?.Name) ? "عرض الخريطة كاملة" : primaryLink!.Name;
+}
+<section class="cg-panel cg-map-section">
+    <div class="cg-section-head">
+        <div>
+            @if (!string.IsNullOrWhiteSpace(title)) { <h2 class="cg-section-title">@title</h2> }
+            @if (!string.IsNullOrWhiteSpace(subtitle)) { <p class="cg-section-subtitle">@subtitle</p> }
+        </div>
+    </div>
+    <div class="cg-map-section__frame" style="background-image:url('@imageUrl')">
+        <a class="cg-map-section__button" href="@linkUrl" target="@linkTarget">
+            <i class="bi bi-box-arrow-up-left"></i>
+            <span>@linkName</span>
+        </a>
+    </div>
+</section>

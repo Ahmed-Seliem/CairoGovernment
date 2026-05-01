@@ -35,5 +35,10 @@
 	<ItemGroup>
 	  <Folder Include="uSync\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="App_Plugins\**\*.html">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
 
 </Project>

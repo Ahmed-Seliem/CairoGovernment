@@ -1,0 +1,15 @@
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+@{
+    var backgroundColor = Model.Settings?.Value<string>("backgroundColor");
+    var contrast = Model.Settings?.Value<string>("contrast");
+    var noBackgroundColor = string.IsNullOrEmpty(backgroundColor);
+    var hasBrightContrast = contrast == "ffffff";
+}
+
+<section class="cg-home-three-col"
+    style="background-color:#@backgroundColor"
+    @(noBackgroundColor ? "nobackgroundcolor" : null)
+    @(hasBrightContrast ? "bright-contrast" : null)>
+    @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+</section>
